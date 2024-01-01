@@ -1,4 +1,4 @@
-<header class='text-white text-center bg-dark fs-4'>ARJ Electric Power Comapny</header>
+<header class='text-white text-center bg-dark fs-4'><img class="m-3" src="images/logo.png" height="50" alt="logo image"></header>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Electric Bill</a>
@@ -14,6 +14,10 @@
 
         <li class="nav-item">
           <a class="nav-link" href="add_customer.php">Add Customer</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="logout.php">logout</a>
         </li>
        
        
