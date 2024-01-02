@@ -1,14 +1,40 @@
 <?php
 include("database_connection.php");
 $meterNumber = $_GET["meterNumber"];
+
+
+$sql = "SELECT * FROM `bill` WHERE meter_number = '$meterNumber'";
+
+$result = mysqli_query($connection, $sql);
+
+$numRows = mysqli_num_rows($result);
+
+while ($row = mysqli_fetch_assoc($result)) {
+
+    $previousReading = $row['previous_meter_reading'];
+    $presentReading = $row['present_meter_reading'];
+
+    
+}
+
 $alert = false;
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     $month = $_POST['month'];
     $year = $_POST['year'];
     $units = $_POST['units'];
     $totalAmount = $units * 20;
+    if($numRows==0){
+        $previousMeterReading = 0;
+        $presentMeterReading = $units;
+    }
+    else{
+        $previousMeterReading= $presentReading;
+        $presentMeterReading = $presentReading + $units; 
 
-   $sql = "INSERT INTO `bill` (`meter_number`,`month`,`year`,`units`,`total_amount`) VALUES ('$meterNumber','$month','$year','$units','$totalAmount')";
+    }
+
+
+   $sql = "INSERT INTO `bill` (`meter_number`,`month`,`year`,`units`,`total_amount`,`previous_meter_reading`,`present_meter_reading`) VALUES ('$meterNumber','$month','$year','$units','$totalAmount','$previousMeterReading','$presentMeterReading')";
    $result = mysqli_query($connection,$sql);
    if($result){
     $alert = true;
@@ -35,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo '<script>
             setTimeout(function () {
                 document.querySelector(".alert").style.display = "none";
-                window.location.href = "index.php";
+                window.location.href = "view_customers.php";
             }, 1000);
         </script>';
     }
@@ -81,13 +107,31 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             </div>
 
+           
 
 
 
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+
+            <button type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>
+
+    <script>
+        function checkInputs(){
+            console.log("mani");
+            let customerFirstName = document.getElementById('customerFirstName');
+            let customerLastName = document.getElementById('customerLastName');
+            let customerCnic = document.getElementById('customerCnic');
+            let customerContact = document.getElementById('customerContact');
+            let customerEmail = document.getElementById('customerEmail');
+            let customerAddress = document.getElementById('customerAddress');
+
+            let anyEmpty = customerFirstName.value === '' || customerLastName.value === '' || customerCnic === '' || customerEmail === '' || customerAddress === '';
+            let submitButton = document.getElementById('submitButton');
+            submitButton.disabled =anyEmpty;
+        }
+    </script>
 </body>
 
 </html>

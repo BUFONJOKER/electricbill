@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         echo '<script>
             setTimeout(function () {
                 document.querySelector(".alert").style.display = "none";
-                window.location.href = "index.php";
+                window.location.href = "view_customers.php";
             }, 1000);
         </script>';
         // header("location: index.php");
@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 <body class='bg-black'>
     <div class="text-center m-5">
-        <img src="images/logo.png" alt="">
+        <img class="mx-auto" src="images/logo.png" alt="" height="100">
         <h1 class=" m-5 text-white">Admin Login</h1>
     </div>
     <div class="container text-white text-center">
