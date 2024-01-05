@@ -8,32 +8,38 @@ $alert = false;
 include("database_connection.php");
 
 
-$sql = "SELECT * FROM `customer`";
-
-$result = mysqli_query($connection, $sql);
-$cnic = "";
-while ($row = mysqli_fetch_assoc($result)) {
-    $cnic = $row['cnic'];
-}
-
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $customerCnic = $_POST['customerCnic'];
-    if ($cnic == $customerCnic) {
-      
-        echo '
+
+    $sql = "SELECT * FROM `customer`";
+
+    $result = mysqli_query($connection, $sql);
+    $cnic = "";
+    $duplicateData = false;
+    while ($row = mysqli_fetch_assoc($result)) {
+        $cnic = $row['cnic'];
+        if ($cnic == $customerCnic) {
+            echo '
                 <div class="alert alert-danger" role="alert">
-                    Customer data already available Try Again
+                    Customer data already available. Please try again.
                 </div>';
 
-        echo '<script>
-                    setTimeout(function () {
-                        document.querySelector(".alert").style.display = "none";
-                        
-                    }, 2000);
-                </script>';
-    } else {
+            echo '<script>
+                setTimeout(function () {
+                    document.querySelector(".alert").style.display = "none";
+                }, 2000);
+            </script>';
+
+            $duplicateData = true; // Set the flag to true if there is a duplicate
+            break;
+        } else {
+            $duplicateData = false;
+        }
+    }
+
+
+    if ($duplicateData == false) {
         $customerFirstName = $_POST['customerFirstName'];
         $customerLastName = $_POST['customerLastName'];
         $customerCnic = $_POST['customerCnic'];

@@ -13,45 +13,69 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     $previousReading = $row['previous_meter_reading'];
     $presentReading = $row['present_meter_reading'];
-
-    
 }
 
 $alert = false;
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $month = $_POST['month'];
     $year = $_POST['year'];
-    $units = $_POST['units'];
-    $totalAmount = $units * 20;
-    if($numRows==0){
-        $previousMeterReading = 0;
-        $presentMeterReading = $units;
+
+    $sql = "SELECT month, year FROM `bill` WHERE meter_number = '$meterNumber'";
+    $result = mysqli_query($connection, $sql);
+   
+    $duplicateData = false;
+
+    // check if month and year already exits or not
+    while ($row = mysqli_fetch_assoc($result)) {
+
+        $monthDatabase = $row['month'];
+        $yearDatabase = $row['year'];
+        if ($monthDatabase == $month && $yearDatabase == $year) {
+            echo '
+            <div class="alert alert-danger" role="alert">
+                Customer bill data already available. Please try again.
+            </div>';
+
+            echo '<script>
+            setTimeout(function () {
+                document.querySelector(".alert").style.display = "none";
+            }, 2000);
+        </script>';
+            $duplicateData = true;
+            break;
+        }
     }
-    else{
-        $previousMeterReading= $presentReading;
-        $presentMeterReading = $presentReading + $units; 
+    
+    if (!$duplicateData) {
+        $units = $_POST['units'];
+        $totalAmount = $units * 20;
+        if ($numRows == 0) {
+            $previousMeterReading = 0;
+            $presentMeterReading = $units;
+        } else {
+            $previousMeterReading = $presentReading;
+            $presentMeterReading = $presentReading + $units;
+        }
 
+
+        $sql = "INSERT INTO `bill` (`meter_number`,`month`,`year`,`units`,`total_amount`,`previous_meter_reading`,`present_meter_reading`) VALUES ('$meterNumber','$month','$year','$units','$totalAmount','$previousMeterReading','$presentMeterReading')";
+        $result = mysqli_query($connection, $sql);
+        if ($result) {
+            $alert = true;
+        } else {
+            echo "data cannnot added <br>";
+        }
     }
-
-
-   $sql = "INSERT INTO `bill` (`meter_number`,`month`,`year`,`units`,`total_amount`,`previous_meter_reading`,`present_meter_reading`) VALUES ('$meterNumber','$month','$year','$units','$totalAmount','$previousMeterReading','$presentMeterReading')";
-   $result = mysqli_query($connection,$sql);
-   if($result){
-    $alert = true;
-   }
-   else{
-    echo "data cannnot added <br>";
-   }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include("head.php");?>
+<?php include("head.php"); ?>
 
 <body class='bg-black'>
 
-<?php include("navbar.php");
+    <?php include("navbar.php");
     if ($alert) {
         echo '
         <div class="alert alert-success" role="alert">
@@ -61,11 +85,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         echo '<script>
             setTimeout(function () {
                 document.querySelector(".alert").style.display = "none";
-                window.location.href = "view_customers.php";
+             
             }, 1000);
         </script>';
     }
-    $alert=false;
+    $alert = false;
     ?>
 
     <div class="container text-white mt-5">
@@ -106,20 +130,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 
             </div>
-
-           
-
-
-
-
-
             <button type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>
 
     <script>
-        function checkInputs(){
-            console.log("mani");
+        function checkInputs() {
+          
             let customerFirstName = document.getElementById('customerFirstName');
             let customerLastName = document.getElementById('customerLastName');
             let customerCnic = document.getElementById('customerCnic');
@@ -129,7 +146,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
             let anyEmpty = customerFirstName.value === '' || customerLastName.value === '' || customerCnic === '' || customerEmail === '' || customerAddress === '';
             let submitButton = document.getElementById('submitButton');
-            submitButton.disabled =anyEmpty;
+            submitButton.disabled = anyEmpty;
         }
     </script>
 </body>

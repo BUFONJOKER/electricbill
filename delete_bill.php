@@ -15,7 +15,7 @@
         echo '<script>
             setTimeout(function () {
                 document.querySelector(".alert").style.display = "none";
-                window.location.href = "index.php";
+                window.location.href = "view_customers.php";
             }, 2000);
         </script>';
     }

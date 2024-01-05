@@ -24,44 +24,54 @@ $lastName = $_GET['lastName'];
         </h2>
         <div class="table-responsive">
 
-            <table class="table table-dark table-striped">
-                <thead>
-                    <tr>
 
-                        <th scope="col">Sr.</th>
-                        <th scope="col">Month</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Units</th>
-                        <th scope="col">Total Amount</th>
-                        <th scope="col">Previous Meter Reading</th>
-                        <th scope="col">Present Meter Reading</th>
+            <?php
 
-                    </tr>
-                </thead>
+            $sql = "SELECT * FROM `bill` WHERE meter_number = '$meterNumber'";
 
-                <tbody>
-                    <?php
+            $result = mysqli_query($connection, $sql);
 
-                    $sql = "SELECT * FROM `bill` WHERE meter_number = '$meterNumber'";
+            if(mysqli_num_rows($result)>0){
+                echo '
+                    <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+    
+                            <th scope="col">Sr.</th>
+                            <th scope="col">Month</th>
+                            <th scope="col">Year</th>
+                            <th scope="col">Units</th>
+                            <th scope="col">Total Amount</th>
+                            <th scope="col">Previous Meter Reading</th>
+                            <th scope="col">Present Meter Reading</th>
+                            <th scope="col">Actions</th>
+    
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                    ';
 
-                    $result = mysqli_query($connection, $sql);
 
-                    $numberOfMonths = 0;
-                    $totalBill = 0;
 
-                    $sr = 0;
-                    while ($row = mysqli_fetch_assoc($result)) {
+            $numberOfMonths = 0;
+            $totalBill = 0;
 
-                        $month = $row['month'];
-                        $numberOfMonths++;
-                        $year = $row['year'];
-                        $units = $row['units'];
-                        $previousMeterReading = $row['previous_meter_reading'];
-                        $presentMeterReading = $row['present_meter_reading'];
-                        $total_amount = $row['total_amount'];
-                        $totalBill += $total_amount;
-                        $sr++;
-                        echo '<tr>
+            $sr = 0;
+            while ($row = mysqli_fetch_assoc($result)) {
+                $id = $row['id'];
+                $month = $row['month'];
+                $numberOfMonths++;
+                $year = $row['year'];
+                $units = $row['units'];
+                $previousMeterReading = $row['previous_meter_reading'];
+                $presentMeterReading = $row['present_meter_reading'];
+                $total_amount = $row['total_amount'];
+                $totalBill += $total_amount;
+                $deleteBill = "delete_only_bill.php?id=" . urlencode($id) . "&meterNumber=" . urlencode($meterNumber) . "&firstName=" . urlencode($firstName) . "&lastName=" . urlencode($lastName);
+
+                $sr++;
+                echo '<tr>
                         <th scope="row">' . $sr . '</th>
                         <td>' . $month . '</td>
                         <td>' . $year . '</td>
@@ -69,20 +79,29 @@ $lastName = $_GET['lastName'];
                         <td>' . $total_amount . '</td>
                         <td>' . $previousMeterReading . '</td>
                         <td>' . $presentMeterReading . '</td>
+                        <td> 
+                        <a class="btn btn-danger" href=' . $deleteBill . '>Delete Bill</a></td>
+                  
+
                     </tr>';
-                    }
-                    if ($numberOfMonths > 0) {
-                        $averageBill = $totalBill / $numberOfMonths;
-                        echo '
+            }
+            if ($numberOfMonths > 0) {
+                $averageBill = $totalBill / $numberOfMonths;
+                echo '
                     <tfoot>
-                    <td colspan="7"><h2>Average Bill = ' . $averageBill . ' </h2></td>
+                    <td colspan="8"><h2>Average Bill = ' . round($averageBill) . ' </h2></td>
                 </tfoot>
                     ';
-                    }
+            }
 
+            }
 
-                    ?>
-                </tbody>
+            else{
+                echo '<h3 class="text-center text-danger mt-5">No bills Found</h3>';
+            }
+
+            ?>
+            </tbody>
 
 
 
