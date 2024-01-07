@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 while ($row = mysqli_fetch_assoc($result)) {
 
                     $billMonth = $row['month'];
+                    $totalUnits = $row['units'];
                     $totalCharges = $row['total_amount'];
                     $previousMeterReading = $row['previous_meter_reading'];
                     $presentMeterReading = $row['present_meter_reading'];
@@ -103,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <th scope="col">Meter No.</th>
                 <th scope="col">Customer Name</th>
                 <th scope="col">Bill Month</th>
+                <th scope="col">Total Units</th>
                 <th scope="col">Total Charges</th>
                 <th scope="col">Previous Meter reading</th>
                 <th scope="col">Present Meter reading</th>
@@ -116,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <th scope="row">' . $meterNumber . '</th>
                 <td>' . $firstName . ' ' . $lastName . '</td>
                 <td>' . $billMonth . '</td>
+                <td>' . $totalUnits . '</td>
                 <td>' . $totalCharges . '</td>
                 <td>' . $previousMeterReading . '</td>
                 <td>' . $presentMeterReading . '</td>
@@ -136,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo '
                 <h2 class="text-white text-center">Last 12 months Bill paid History</h2>
                 <div class="table-responsive ">
-                <table class="table table-dark table-striped ">
+                <table class="table table-success table-striped ">
                 <thead>
                     <tr>
 

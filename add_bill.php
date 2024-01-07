@@ -16,7 +16,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 $alert = false;
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+if (isset($_POST['submit'])) {
     $month = $_POST['month'];
     $year = $_POST['year'];
 
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         if ($monthDatabase == $month && $yearDatabase == $year) {
             echo '
             <div class="alert alert-danger" role="alert">
-                Customer bill data already available. Please try again.
+                Bill dstails already available. Please try again.
             </div>';
 
             echo '<script>
@@ -102,14 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <div class="col-6">
                     <div class="mb-3">
                         <label for="month" class="form-label">Month</label>
-                        <input name="month" minlength="3" maxlength="3" type="text" class="form-control" id="month" placeholder="Enter month like Jan,Feb">
+                        <input name="month" minlength="3" id="month" maxlength="3" oninput="checkInputs()" type="text" class="form-control" id="month" placeholder="Enter month like Jan,Feb">
                     </div>
                 </div>
 
                 <div class="col-6">
                     <div class="mb-3">
                         <label for="year" class="form-label">Year</label>
-                        <input name="year" minlength="4" maxlength="4" type="text" class="form-control" id="year" placeholder="Enter year like 2011,2012,2023">
+                        <input name="year" id="year" minlength="4" maxlength="4" oninput="checkInputs()" type="number" class="form-control" id="year" placeholder="Enter year like 2011,2012,2023">
                     </div>
                 </div>
             </div>
@@ -118,33 +118,30 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <div class="col-6">
                     <div class="mb-3">
                         <label for="units" class="form-label">Units</label>
-                        <input name="units" type="text" class="form-control" id="units" placeholder="Enter total Units used in One Month">
+                        <input name="units" id="units" type="number" oninput="checkInputs()" class="form-control" id="units" placeholder="Enter total Units used in One Month">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="mb-3">
                         <label for="priceOneUnit" class="form-label">Price Of One Unit</label>
-                        <input readonly value="20" name="priceOneUnit" type="email" class="form-control" id="priceOneUnit" aria-describedby="emailHelp">
+                        <input readonly value="20" name="priceOneUnit" type="text" class="form-control" id="priceOneUnit" aria-describedby="emailHelp">
                     </div>
                 </div>
 
 
             </div>
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" name="submit" id="submitButton" disabled class="btn btn-primary">Add</button>
         </form>
     </div>
 
     <script>
         function checkInputs() {
           
-            let customerFirstName = document.getElementById('customerFirstName');
-            let customerLastName = document.getElementById('customerLastName');
-            let customerCnic = document.getElementById('customerCnic');
-            let customerContact = document.getElementById('customerContact');
-            let customerEmail = document.getElementById('customerEmail');
-            let customerAddress = document.getElementById('customerAddress');
+            let month = document.getElementById('month');
+            let year = document.getElementById('year');
+            let units = document.getElementById('units');
 
-            let anyEmpty = customerFirstName.value === '' || customerLastName.value === '' || customerCnic === '' || customerEmail === '' || customerAddress === '';
+            let anyEmpty = month.value === '' || year.value === '' || units.value === '';
             let submitButton = document.getElementById('submitButton');
             submitButton.disabled = anyEmpty;
         }

@@ -98,8 +98,7 @@ include('database_connection.php');
                 </td>
 
             </tr>
-            </tbody>
-            </table>
+            
             ';
             }
             }
@@ -111,7 +110,8 @@ include('database_connection.php');
             }
 
             ?>
-            
+            </tbody>
+            </table>
         </div>
     </div>
 </body>
