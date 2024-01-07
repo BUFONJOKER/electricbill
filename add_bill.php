@@ -140,8 +140,13 @@ if (isset($_POST['submit'])) {
             let month = document.getElementById('month');
             let year = document.getElementById('year');
             let units = document.getElementById('units');
+          
 
-            let anyEmpty = month.value === '' || year.value === '' || units.value === '';
+            if(year.value.length>4){
+                year.value = year.value.slice(0,4);
+            }
+
+            let anyEmpty = month.value === '' || year.value.length!=4 || year.value === '' || units.value === '';
             let submitButton = document.getElementById('submitButton');
             submitButton.disabled = anyEmpty;
         }

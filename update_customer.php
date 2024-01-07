@@ -1,15 +1,9 @@
 <?php
-session_start();
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit();
-}
+include("check_login.php");
 $alert = false;
 include("database_connection.php");
 
 $meterNumber = $_GET['meterNumber'];
-
-
 
 
 $sql = "SELECT * FROM `customer` WHERE meter_number = $meterNumber";
@@ -30,7 +24,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $image = $row['image'];
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (isset($_POST['submit'])) {
 
 
     $customerFirstName = $_POST['customerFirstName'];
@@ -81,8 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($result) {
             $alert = true;
-        } else {
-            echo "Data could not be added" . "<br>";
         }
     }
 }
@@ -139,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-6">
                     <div class="mb-3">
                         <label for="customerContact" class="form-label">Contact Number</label>
-                        <input name="customerContact" value="<?php echo $contact ?>" type="text" class="form-control" id="customerContact" minlength="11" maxlength="11">
+                        <input name="customerContact" value="<?php echo $contact ?>" type="number" class="form-control" id="customerContact" minlength="11" maxlength="11">
                     </div>
                 </div>
 
@@ -186,13 +178,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             </div>
 
-            <button type="submit" id="submitButton" class="btn btn-primary">Update</button>
+            <button type="submit" name="submit" id="submitButton" class="btn btn-primary">Update</button>
 
 
         </form>
     </div>
 
+    <script>
+        function checkInputs() {
+         
+            let customerContact = document.getElementById('customerContact');
+         
 
+            if (customerContact.value.length > 10) {
+                customerContact.value = customerContact.value.slice(0,10);
+            }
+
+        };
+    </script>
 
 </body>
 

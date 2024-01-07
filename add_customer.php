@@ -1,15 +1,12 @@
 <?php
-session_start();
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit();
-}
+
+include("check_login.php");
 $alert = false;
 include("database_connection.php");
 
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (isset($_POST['submit'])) {
     $customerCnic = $_POST['customerCnic'];
 
     $sql = "SELECT * FROM `customer`";
@@ -68,8 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($result) {
             $alert = true;
-        } else {
-            echo "Data could not be added" . "<br>";
         }
     }
 }
@@ -103,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <div class="container text-white mt-5">
         <h1 class='text-center'>Add Customer Details</h1>
-        <form method="POST" action="add_customer.php" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-6">
                     <div class="mb-3">
@@ -125,14 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-6">
                     <div class="mb-3">
                         <label for="customerCnic" class="form-label">CNIC</label>
-                        <input name="customerCnic" type="text" class="form-control" id="customerCnic" minlength="13" maxlength="13" oninput="checkInputs()" placeholder="Enter 13 digits CNIC">
+                        <input name="customerCnic" type="number" class="form-control" id="customerCnic" oninput="checkInputs()" placeholder="Enter 13 digits CNIC">
                     </div>
                 </div>
 
                 <div class="col-6">
                     <div class="mb-3">
                         <label for="customerContact" class="form-label">Contact Number</label>
-                        <input name="customerContact" type="text" class="form-control" id="customerContact" minlength="11" maxlength="11" oninput="checkInputs()" placeholder="Enter 11 digits Contact Number">
+                        <input name="customerContact" type="number" class="form-control" id="customerContact" minlength="11" maxlength="11" oninput="checkInputs()" placeholder="Enter 11 digits Contact Number without starting 0">
                     </div>
                 </div>
 
@@ -156,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             </div>
 
-            <button type="submit" id="submitButton" class="btn btn-primary" disabled>Add</button>
+            <button type="submit" name="submit" id="submitButton" class="btn btn-primary" disabled>Add</button>
 
 
         </form>
@@ -165,17 +160,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script>
         function checkInputs() {
-            let customerFirstName = document.getElementById('customerFirstName');
-            let customerLastName = document.getElementById('customerLastName');
             let customerCnic = document.getElementById('customerCnic');
             let customerContact = document.getElementById('customerContact');
+            if (customerCnic.value.length > 13) {
+                customerCnic.value = customerCnic.value.slice(0,13);
+            }
+
+            if (customerContact.value.length > 10) {
+                customerContact.value = customerContact.value.slice(0,10);
+            }
+
+            let customerFirstName = document.getElementById('customerFirstName');
+            let customerLastName = document.getElementById('customerLastName');
             let customerEmail = document.getElementById('customerEmail');
             let customerAddress = document.getElementById('customerAddress');
             let image = document.getElementById('image');
 
-
-
-            console.log(image.value);
 
             let anyEmpty = customerFirstName.value === "" || customerLastName.value === "" || customerCnic.value === "" || customerContact.value === "" || customerEmail.value === "" || customerAddress.value === "" || image.value === "";
 
