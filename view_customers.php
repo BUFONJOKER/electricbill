@@ -1,9 +1,5 @@
 <?php
-session_start();
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit();
-}
+include("check_login.php");
 
 include('database_connection.php');
 

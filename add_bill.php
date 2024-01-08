@@ -1,4 +1,5 @@
 <?php
+include("check_login.php");
 include("database_connection.php");
 $meterNumber = $_GET["meterNumber"];
 

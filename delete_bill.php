@@ -1,24 +1,25 @@
 <?php
-    include("database_connection.php");
-    $meterNumber = $_GET['meterNumber'];
-    $id = $_GET['id'];
+include("check_login.php");
+include("database_connection.php");
+$meterNumber = $_GET['meterNumber'];
+$id = $_GET['id'];
 
-    $sql = "DELETE FROM bill WHERE `meter_number` = $meterNumber";
+$sql = "DELETE FROM bill WHERE `meter_number` = $meterNumber";
 
-    $result = mysqli_query($connection, $sql);
-    if($result){
-        echo '
+$result = mysqli_query($connection, $sql);
+if ($result) {
+    echo '
         <div class="alert alert-danger" role="alert">
             Customer deleted
         </div>';
 
-        echo '<script>
+    echo '<script>
             setTimeout(function () {
                 document.querySelector(".alert").style.display = "none";
                 window.location.href = "view_customers.php";
             }, 2000);
         </script>';
-    }
+}
 
 ?>
 
